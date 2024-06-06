@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ADSCrossPlatform.Details"
+             Title="Details">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Button x:Name="DeleteButton" Text="Удалить" Margin="10"/>
+            <Label x:Name="ArticleField" Style="{StaticResource Headline}"/>
+            <VerticalStackLayout>                
+                    <HorizontalStackLayout >
+                        <Label Text="  Зона - " FontSize="16"/>
+                        <Entry x:Name="ZoneField" FontSize="16"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="  Место - " FontSize="16"/>
+                        <Entry x:Name="RowField" FontSize="16"/>
+                        <Label Text=" - "/>
+                        <Entry x:Name="PlaceField" FontSize="16"/>
+                        <Label Text=" - "/>
+                        <Entry x:Name="LevelField" FontSize="16"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <Label Text="  Qty - " FontSize="16"/>
+                        <Label x:Name="QtyField" FontSize="16"/>
+                    </HorizontalStackLayout>                
+            </VerticalStackLayout>
+            <HorizontalStackLayout>
+                <Button x:Name="OkButton" Text="Ок" Margin="10"/>
+                <Button x:Name="CancelButton" Text="Отмена" Margin="10"/>                
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>   
+</ContentPage>
