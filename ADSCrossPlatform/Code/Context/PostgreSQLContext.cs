@@ -16,7 +16,7 @@ namespace ADSCrossPlatform.Code.Context
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {                
-                optionsBuilder.UseNpgsql("Host=192.168.1.102;Port=5432;Database=adsV2db;Username=postgres;Password=Inter101!");
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=adsV2db;Username=postgres;Password=Inter101!");
                 optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
         }

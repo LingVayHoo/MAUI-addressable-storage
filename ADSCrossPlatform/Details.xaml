@@ -4,30 +4,101 @@
              x:Class="ADSCrossPlatform.Details"
              Title="Details">
     <ScrollView>
-        <VerticalStackLayout>
-            <Button x:Name="DeleteButton" Text="Удалить" Margin="10"/>
-            <Label x:Name="ArticleField" Style="{StaticResource Headline}"/>
-            <VerticalStackLayout>                
-                    <HorizontalStackLayout >
-                        <Label Text="  Зона - " FontSize="16"/>
-                        <Entry x:Name="ZoneField" FontSize="16"/>
+        <VerticalStackLayout 
+            Padding="10,0"
+            Spacing="5">
+            <Grid 
+                ColumnDefinitions="*, Auto"           
+                HorizontalOptions="FillAndExpand">
+                
+                <Button 
+                    x:Name="DeleteButton" 
+                    Text="Удалить"
+                    Grid.Column="0"/>
+                <!-- ProgressBar для индикации загрузки -->
+                <ActivityIndicator 
+                    x:Name="LoadActivityIndicator"           
+                    IsRunning="False"   
+                    IsVisible="False"
+                    HorizontalOptions="Center"                     
+                    Grid.Column="1"                                  
+                    Margin="10,0,0,0"/>
+            </Grid>
+            
+            <Label 
+                x:Name="ArticleField" 
+                Style="{StaticResource Headline}"/>
+            <VerticalStackLayout 
+                Padding="10">
+                <Grid     
+                    ColumnDefinitions="*, Auto"    
+                    Padding="10">
+                    <Label 
+                        Text="Зона - " 
+                        FontSize="16" 
+                        Grid.Column="0"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"/>
+                    <Entry 
+                        x:Name="ZoneField" 
+                        FontSize="16"  
+                        HorizontalOptions="EndAndExpand"
+                        VerticalOptions="Center"
+                        Grid.Column="1"/>
+                </Grid>
+
+                <Grid     
+                    ColumnDefinitions="*, Auto"  
+                    HorizontalOptions="FillAndExpand">
+                    <HorizontalStackLayout  
+                        Grid.Column="0"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        Padding="10">
+                        <Label Text="Место   - " FontSize="16"  VerticalOptions="Center"/>
+                        
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout>
-                        <Label Text="  Место - " FontSize="16"/>
+                    <HorizontalStackLayout  
+                        Grid.Column="1"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        Padding="10">
                         <Entry x:Name="RowField" FontSize="16"/>
-                        <Label Text=" - "/>
-                        <Entry x:Name="PlaceField" FontSize="16"/>
-                        <Label Text=" - "/>
-                        <Entry x:Name="LevelField" FontSize="16"/>
+                        <Label Text=" - "  VerticalOptions="Center" />
+                        <Entry x:Name="PlaceField" FontSize="16" />
+                        <Label Text=" - "  VerticalOptions="Center" />
+                        <Entry x:Name="LevelField" FontSize="16" />
                     </HorizontalStackLayout>
-                    <HorizontalStackLayout>
-                        <Label Text="  Qty - " FontSize="16"/>
-                        <Label x:Name="QtyField" FontSize="16"/>
-                    </HorizontalStackLayout>                
+                    
+                </Grid>
+
+                <HorizontalStackLayout Padding="10">
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Padding="10">
+                    <Label Text="  Qty - " FontSize="16"/>
+                    <Label x:Name="QtyField" FontSize="16"/>
+                </HorizontalStackLayout>                
             </VerticalStackLayout>
-            <HorizontalStackLayout>
-                <Button x:Name="OkButton" Text="Ок" Margin="10"/>
-                <Button x:Name="CancelButton" Text="Отмена" Margin="10"/>                
+            <Grid     
+                ColumnDefinitions="*, Auto"  
+                HorizontalOptions="FillAndExpand"
+                Padding="10">
+                <Button 
+                    x:Name="OkButton" 
+                    Text="Ок" 
+                    Grid.Column="0"
+                    MinimumWidthRequest="100"
+                    HorizontalOptions="StartAndExpand"
+                    VerticalOptions="Center"/>
+                <Button 
+                    x:Name="CancelButton" 
+                    Text="Отмена"
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"/>
+            </Grid>
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                               
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>   

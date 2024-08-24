@@ -17,7 +17,7 @@ namespace ADSCrossPlatform.Code.Models
             }
         }
 
-        public string? Article
+        public string Article
         {
             get { return _addressDBModel.Article; }
             set

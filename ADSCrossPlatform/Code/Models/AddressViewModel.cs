@@ -1,26 +1,87 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace ADSCrossPlatform.Code.Models
 {
-    public class AddressViewModel(DataManager dataManager) : INotifyPropertyChanged
+    public class AddressViewModel : INotifyPropertyChanged
     {
         private AddressModel? _selectedAddressModel;
-        private DataManager _dataManager = dataManager;
-        private string _article;
+        private readonly DataManager _dataManager;
 
-        public ObservableCollection<AddressModel> Addresses        
+        private string _article = string.Empty;
+
+        public string Article
         {
-            get
+            get => _article;
+            set
             {
-                //return _dataManager.GetAllData();
-                return _dataManager.GetDataByArticle(Article);
+                if (_article != value)
+                {
+                    _article = value;
+                    OnPropertyChanged();
+                    // Используем async void, чтобы безопасно вызывать await внутри сеттера
+                    async void LoadData() => await LoadAddressesAsync();
+                    LoadData();
+                }
             }
-            set { }
         }
 
-        public string Article { get => _article; set => _article = value; }
+        private ObservableCollection<AddressModel> _addresses = new();
+        public ObservableCollection<AddressModel> Addresses
+        {
+            get => _addresses;
+            private set
+            {
+                _addresses = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Индикация загрузки данных
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            private set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Конструктор без article
+        public AddressViewModel(DataManager dataManager)
+        {
+            _dataManager = dataManager;
+        }
+
+        // Асинхронный метод для загрузки данных по артикулу
+        public async Task LoadAddressesAsync()
+        {
+            if (string.IsNullOrWhiteSpace(Article))
+            {
+                Addresses.Clear();  // Очищаем коллекцию, если артикул пустой
+                return;
+            }
+
+            IsLoading = true;
+
+            var result = await _dataManager.GetContentByArticleAsync(Article);
+
+            if (result != null)
+            {
+                Addresses = new ObservableCollection<AddressModel>(result);
+            }
+            else
+            {
+                Addresses.Clear();  // Очищаем коллекцию, если результат null
+            }
+            await Task.Delay(2000);
+
+            IsLoading = false;
+        }
 
         internal AddressModel? SelectedAddressModel
         {
@@ -28,56 +89,43 @@ namespace ADSCrossPlatform.Code.Models
             set
             {
                 _selectedAddressModel = value;
-                OnPropertyChanged("SelectedModel");
+                OnPropertyChanged(nameof(SelectedAddressModel));
             }
         }
 
-        public AddressDBModel addressDBModel
-        {
-            get
-            {
-                return _dataManager.addressDBModel;
-            }
-        }
+        public AddressDBModel AddressDBModel => _dataManager.AddressDBModel;
 
-        public void UpdateArticle(string article)
-        {
-            Article = article;
-            OnPropertyChanged("Addresses");
-        }
-
-        public string[] GetAllInfo(string article, bool isFindByArticle)
-        {
-            return _dataManager.GetAllInfo(article, isFindByArticle);
-        }
-
+        // Создание новой записи
         public async Task<bool> CreateRecord(AddressDBModel addressDBModel)
         {
-            bool result = await _dataManager.CreateRecord(addressDBModel);
-            OnPropertyChanged("Addresses");
+            bool result = await _dataManager.CreateRecordAsync(addressDBModel);
+            await LoadAddressesAsync();  // Обновляем список после создания
             return result;
         }
 
+        // Редактирование записи
         public async Task<bool> EditRecord(AddressDBModel addressDBModel)
         {
-            bool result = await _dataManager.EditRecord(addressDBModel);
-            OnPropertyChanged("Addresses");
+            bool result = await _dataManager.EditRecordAsync(addressDBModel);
+            await LoadAddressesAsync();  // Обновляем список после редактирования
             return result;
         }
 
+        // Удаление записи
         public async Task<bool> DeleteRecord(AddressDBModel addressDBModel)
         {
-            bool result = await _dataManager.DeleteRecord(addressDBModel);
-            OnPropertyChanged("Addresses");
+            bool result = await _dataManager.DeleteRecordAsync(addressDBModel);
+            await LoadAddressesAsync();  // Обновляем список после удаления
             return result;
         }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        // Уведомление об изменениях свойств
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

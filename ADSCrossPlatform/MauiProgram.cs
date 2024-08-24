@@ -1,4 +1,6 @@
-﻿namespace ADSCrossPlatform
+﻿using Microsoft.Extensions.Logging;
+
+namespace ADSCrossPlatform
 {
     public static class MauiProgram
     {

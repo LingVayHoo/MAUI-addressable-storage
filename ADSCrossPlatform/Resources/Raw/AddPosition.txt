@@ -1,0 +1,15 @@
+[
+            {
+              "quantity": 1,
+              "price": 799.0,
+              "assortment": {
+                "meta": {
+                  "href" : "https://api.moysklad.ru/api/remap/1.2/entity/product/f76b1217-1e05-11e4-f0ef-002590a28eca",
+                  "metadataHref": "https://api.moysklad.ru/api/remap/1.2/entity/product/metadata",
+                  "type": "product",
+                  "mediaType": "application/json"
+                }
+              },
+              "overhead": 70
+            }
+          ]
