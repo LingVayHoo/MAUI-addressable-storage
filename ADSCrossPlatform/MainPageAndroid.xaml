@@ -46,8 +46,10 @@
                         HorizontalOptions="EndAndExpand"
                         HorizontalTextAlignment="Center">
                         <Picker.Items>
-                            <x:String>31</x:String>
-                            <x:String>43</x:String>
+                            <x:String>310</x:String>
+                            <x:String>390</x:String>
+                            <x:String>SLM</x:String>
+                            <x:String>450</x:String>
                         </Picker.Items>
                     </Picker>
                 </Frame>

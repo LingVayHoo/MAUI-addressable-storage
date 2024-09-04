@@ -1,9 +1,9 @@
-namespace ADSCrossPlatform;
 using ADSCrossPlatform.Code.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
-public partial class Window_310 : ContentPage
+namespace ADSCrossPlatform;
+
+public partial class Window_390 : ContentPage
 {
     private DataManager _dataManager;
     private AddressViewModel _addressViewModel;
@@ -17,10 +17,9 @@ public partial class Window_310 : ContentPage
     private ProductData _selectedProduct;
 
     private int qtyInStore;
-
-    public Window_310(DataManager dataManager, AddressViewModel addressViewModel, StoredSettings storedSettings)
-	{
-		InitializeComponent();
+    public Window_390(DataManager dataManager, AddressViewModel addressViewModel, StoredSettings storedSettings)
+    {
+        InitializeComponent();
 
         //Внедрение зависимостей
         _dataManager = dataManager;
@@ -36,20 +35,36 @@ public partial class Window_310 : ContentPage
 
         SearchResultsListView.ItemsSource = _searchResultValues;
 
-        windowPicker.SelectedIndex = 0;
+        windowPicker.SelectedIndex = 1;
+
+        var TT3190Storages = new List<string>()
+        {
+            "ТТ390",
+            "Поврежденные",
+            "Ожидание запчастей",
+            "Переупаковка"
+        };
+
+        StoragePicker.ItemsSource = TT3190Storages;
+        StoragePicker.SelectedIndex = 0;
+    }
+
+    private void LoadIndicator(bool setActive)
+    {
+        LoginActivityIndicator.IsVisible = setActive;
+        LoginActivityIndicator.IsRunning = setActive;
     }
 
     private async void PickerSelectedIndexChanged(object sender, EventArgs e)
     {
         if (IsBlocked())
         {
-            windowPicker.SelectedIndex = 0;
+            windowPicker.SelectedIndex = 1;
             return;
         }
-
-        if (windowPicker.SelectedItem.ToString() == "390")
+        if (windowPicker.SelectedItem.ToString() == "310")
         {
-            var mainPage = App.ServiceProvider.GetRequiredService<Window_390>();
+            var mainPage = App.ServiceProvider.GetRequiredService<Window_310>();
             await Navigation.PushAsync(mainPage);
         }
 
@@ -64,12 +79,6 @@ public partial class Window_310 : ContentPage
             var Widnow_310_Back_Page = App.ServiceProvider.GetRequiredService<Window_310_Back>();
             await Navigation.PushAsync(Widnow_310_Back_Page);
         }
-    }
-
-    private void LoadIndicator(bool setActive)
-    {
-        LoginActivityIndicator.IsVisible = setActive;
-        LoginActivityIndicator.IsRunning = setActive;
     }
 
     // Обработчик нажатия на кнопку "Поиск"
@@ -148,10 +157,10 @@ public partial class Window_310 : ContentPage
 
     private void Button_Clicked(object sender, EventArgs e)
     {
-        if (IsBlocked()) 
+        if (IsBlocked())
         {
             return;
-        }            
+        }
         CreateMove();
     }
 
@@ -193,12 +202,19 @@ public partial class Window_310 : ContentPage
             _storedSettings.MoveToStore310) || string.IsNullOrWhiteSpace(_storedSettings.MoveFromStore310))
             return;
 
-        LoadIndicator(true);
-        var res = await _dataManager.CreateMoveWithArticles(
-            movingProducts, 
-            _storedSettings.MoveToStore310, 
-            _storedSettings.MoveFromStore310);
-        LoadIndicator(false);
+        var targetStore = _storedSettings?.Storages?.FirstOrDefault(x => x.Value == 
+        StoragePicker.SelectedItem.ToString()).Key;
+        bool res = false;
+        if (targetStore != null)
+        {
+            LoadIndicator(true);
+            res = await _dataManager.CreateMoveWithArticles(
+            movingProducts,
+            targetStore,
+            _storedSettings.MoveFromStore390);
+            LoadIndicator(false);
+        }        
+
 
         if (res)
         {

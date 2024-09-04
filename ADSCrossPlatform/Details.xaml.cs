@@ -3,81 +3,35 @@ using ADSCrossPlatform.Code.Models;
 
 public partial class Details : ContentPage
 {
-	public Details()
+    private AddressViewModel _addressViewModel;
+
+	public Details(AddressViewModel addressViewModel)
 	{
 		InitializeComponent();
-	}
 
-	public Details(AddressViewModel addressViewModel, AddressDBModel addressDBModel, bool isNew)
-	{
-		InitializeComponent();
-        ArticleField.Text = addressDBModel.Article;
-        ZoneField.Text = addressDBModel.Zone;
-        RowField.Text = addressDBModel.Row;
-        PlaceField.Text = addressDBModel.Place;
-        LevelField.Text = addressDBModel.Level;
-        QtyField.Text = addressDBModel.Qty;
+        _addressViewModel = addressViewModel;
 
-        CancelButton.Clicked += async (o, e) =>
-        {
-            if (IsBlocked()) return;
-            addressViewModel.SelectedAddressModel = null;
-            await Navigation.PopAsync();
-        };
-
-        OkButton.Clicked += async delegate
-        {
-            if (IsBlocked()) return;
-            addressDBModel.Article = ArticleField.Text;
-            addressDBModel.Zone = ZoneField.Text;
-            addressDBModel.Row = RowField.Text;
-            addressDBModel.Place = PlaceField.Text;
-            addressDBModel.Level = LevelField.Text;
-            addressDBModel.Qty = QtyField.Text;
-            bool res = false;
-            IndicatorSetActive(true);
-            if (isNew) res = await addressViewModel.CreateRecord(addressDBModel);
-            else res = await addressViewModel.EditRecord(addressDBModel);
-            addressViewModel.SelectedAddressModel = null;
-            if (res) await Navigation.PopAsync();
-            IndicatorSetActive(false);
-        };
-
-        DeleteButton.Clicked += async delegate
-        {
-            if (IsBlocked()) return;
-            try
-            {
-                bool result = await DisplayAlert("Подтвердить действие", "Вы хотите удалить элемент?", "Да", "Нет");
-                if (result)
-                {
-                    addressDBModel.Article = ArticleField.Text;
-                    addressDBModel.Zone = ZoneField.Text;
-                    addressDBModel.Row = RowField.Text;
-                    addressDBModel.Place = PlaceField.Text;
-                    addressDBModel.Level = LevelField.Text;
-                    addressDBModel.Qty = QtyField.Text;
-
-                    IndicatorSetActive(true);
-                    bool res = await addressViewModel.DeleteRecord(addressDBModel);
-                    IndicatorSetActive(false);
-                    addressViewModel.SelectedAddressModel = null;
-                    if (res)
-                    {
-                        await Navigation.PopAsync();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogException(ex);
-            }
-        };
-
+        ArticleField.Text = _addressViewModel.SelectedAddressModel?.Article;
+        ZoneField.Text = _addressViewModel.SelectedAddressModel?.Zone;
+        RowField.Text = _addressViewModel.SelectedAddressModel?.Row;
+        PlaceField.Text = _addressViewModel.SelectedAddressModel?.Place;
+        LevelField.Text = _addressViewModel.SelectedAddressModel?.Level;
+        QtyField.Text = _addressViewModel.SelectedAddressModel?.Qty;
 
 
     }
 
+    private void InitFields()
+    {
+        if (_addressViewModel.SelectedAddressModel == null) return;
+
+        _addressViewModel.SelectedAddressModel.Article = ArticleField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.Zone = ZoneField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.Row = RowField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.Place = PlaceField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.Level = LevelField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.Qty = QtyField.Text ?? string.Empty;        
+    }
 
     private void IndicatorSetActive(bool value)
     {
@@ -88,5 +42,84 @@ public partial class Details : ContentPage
     private bool IsBlocked()
     {
         return LoadActivityIndicator.IsRunning;
+    }
+
+    private async void OkButton_Clicked(object sender, EventArgs e)
+    {
+        if (IsBlocked()) return;
+        if (_addressViewModel.SelectedAddressModel == null)
+        {
+            await DisplayAlert("Ошибка!", "Что-то пошло не так :( Попробуйте снова", "Ok");
+            return;
+        }
+        InitFields();
+        bool res = false;
+        IndicatorSetActive(true);
+        res = await _addressViewModel.EditRecord(_addressViewModel.SelectedAddressModel.AddressDBModel);
+        try
+        {
+            res = await _addressViewModel.EditRecord(_addressViewModel.SelectedAddressModel.AddressDBModel);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ошибка", $"Не удалось изменить запись: {ex.Message}", "ОК");
+            IndicatorSetActive(false);
+            return;
+        }
+
+        _addressViewModel.SelectedAddressModel = null;
+        if (res) await Navigation.PopAsync();
+        IndicatorSetActive(false);
+    }
+
+    private async void CancelButton_Clicked(object sender, EventArgs e)
+    {
+        if (IsBlocked()) return;
+        _addressViewModel.SelectedAddressModel = null;
+        await Navigation.PopAsync();
+    }
+
+    private async void DeleteButton_Clicked(object sender, EventArgs e)
+    {
+        if (IsBlocked()) return;
+        try
+        {
+            bool result = await DisplayAlert("Подтвердить действие", "Вы хотите удалить элемент?", "Да", "Нет");
+            if (result)
+            {
+                if (_addressViewModel.SelectedAddressModel == null)
+                {
+                    await DisplayAlert("Ошибка!", "Что-то пошло не так :( Попробуйте снова", "Ok");
+                    return;
+                }
+
+                InitFields();
+                bool res = false;
+                IndicatorSetActive(true);
+
+                try
+                {
+                    res = await _addressViewModel.DeleteRecord(_addressViewModel.SelectedAddressModel.AddressDBModel); ;
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Ошибка", $"Не удалось удалить запись: {ex.Message}", "ОК");
+                    IndicatorSetActive(false);
+                    return;
+                }
+
+                IndicatorSetActive(false);
+
+                _addressViewModel.SelectedAddressModel = null;
+                if (res)
+                {
+                    await Navigation.PopAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogException(ex);
+        }
     }
 }

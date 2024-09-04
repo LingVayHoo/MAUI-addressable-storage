@@ -16,7 +16,8 @@ namespace ADSCrossPlatform.Code.Models
     {
         // Вынесем базовые URL в константы для удобства
         private const string BaseUrl = "https://valyashki.ru/api";
-        private const string LocalApiUrls = "https://localhost:44353/api";
+        //private const string BaseUrl = "https://localhost:44353/api";
+        //private const string LocalApiUrls = "https://localhost:44353/api";
 
         private readonly HttpClient _httpClient;
 
@@ -140,21 +141,31 @@ namespace ADSCrossPlatform.Code.Models
             return product;
         }
 
+        public async Task<bool> CreateMoveWithArticles(List<ProductForMove> productForMove, string toStore, string fromStore)
+        {
+            ProductsWithStores productsWithStores = new ProductsWithStores()
+            {
+                ProductsForMove = productForMove,
+                stores = new string[2]
+                {
+                    toStore,
+                    fromStore
+                }
+            };
 
-        //public async Task<IEnumerable<AddressDBModel>?> GetAllContentAsync()
-        //{
-        //    try
-        //    {
-        //        string url = $"{BaseUrl}/Addresses";
-        //        string json = await _httpClient.GetStringAsync(url);
-        //        return JsonConvert.DeserializeObject<IEnumerable<AddressDBModel>>(json);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogException(ex);
-        //        return null;
-        //    }
-        //}
+            try
+            {
+                string url = $"{BaseUrl}/Order/moveads";
+                StringContent content = new StringContent(JsonConvert.SerializeObject(productsWithStores), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+                return false;
+            }
+        }
 
         public async Task<IEnumerable<AddressDBModel>?> GetContentByArticle(string article)
         {
@@ -170,43 +181,6 @@ namespace ADSCrossPlatform.Code.Models
                 return null;
             }
         }
-
-        //public async Task<string> GetDataFromMyWarehouseByArt(string article)
-        //{
-        //    string url = $"https://api.moysklad.ru/api/remap/1.2/entity/assortment?filter=article~{Uri.EscapeDataString(article)}";
-        //    return await GetDataFromMyWarehouse(url);
-        //}
-
-        //public async Task<string> GetDataFromMyWarehouseByName(string article)
-        //{
-        //    string url = $"https://api.moysklad.ru/api/remap/1.2/entity/assortment?filter=name~{Uri.EscapeDataString(article)}";
-        //    return await GetDataFromMyWarehouse(url);
-        //}
-
-        //private async Task<string> GetDataFromMyWarehouse(string targetUrl)
-        //{
-        //    using var handler = new HttpClientHandler
-        //    {
-        //        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-        //    };
-
-        //    using var client = new HttpClient(handler);
-
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "10ee53a08a7ef85e882e9aab0721cd983f430bb5");
-        //    client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-
-        //    try
-        //    {
-        //        HttpResponseMessage response = await client.GetAsync(targetUrl);
-        //        response.EnsureSuccessStatusCode();
-        //        return await response.Content.ReadAsStringAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogException(ex);
-        //        return string.Empty;
-        //    }
-        //}
 
         public async Task<bool> PutAddressDBModel(Guid id, AddressDBModel addressDBModel)
         {
@@ -266,11 +240,21 @@ namespace ADSCrossPlatform.Code.Models
         //    return productsAdapted?.Select(item => new ADSProductObserve(item)).ToList() ?? new List<ADSProductObserve>();
         //}
 
-        internal async Task<Dictionary<string, string>?> Login(AccountData accountData)
+        public async Task<bool> CheckData(LoginData loginData)
+        {
+            string url = $"{BaseUrl}/Order/check";
+            string jsonData = JsonConvert.SerializeObject(loginData);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+            return response.IsSuccessStatusCode ? true : false;
+        }
+
+        internal async Task<LoginData?> Login(AccountData accountData)
         {
             try
             {
-                string url = $"{BaseUrl}/Order/login";
+                string url = $"{BaseUrl}/Order/loginwithdata";
 
                 string jsonData = JsonConvert.SerializeObject(accountData);
                 var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -280,8 +264,8 @@ namespace ADSCrossPlatform.Code.Models
 
                 string result = await response.Content.ReadAsStringAsync();
                 // return result != null ? JsonConvert.DeserializeObject<Dictionary<string, string>>(result) : new Dictionary<string, string>();
-                var deserialized = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-                if (deserialized == null || deserialized.Count <= 0) return null;
+                var deserialized = JsonConvert.DeserializeObject<LoginData>(result);
+                if (deserialized == null || string.IsNullOrWhiteSpace(deserialized.UserName)) return null;
                 else return deserialized;
             }
             catch (HttpRequestException httpRequestException)

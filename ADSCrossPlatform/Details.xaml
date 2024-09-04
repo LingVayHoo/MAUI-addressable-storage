@@ -14,7 +14,8 @@
                 <Button 
                     x:Name="DeleteButton" 
                     Text="Удалить"
-                    Grid.Column="0"/>
+                    Grid.Column="0"
+                    Clicked="DeleteButton_Clicked"/>
                 <!-- ProgressBar для индикации загрузки -->
                 <ActivityIndicator 
                     x:Name="LoadActivityIndicator"           
@@ -89,13 +90,15 @@
                     Grid.Column="0"
                     MinimumWidthRequest="100"
                     HorizontalOptions="StartAndExpand"
-                    VerticalOptions="Center"/>
+                    VerticalOptions="Center"
+                    Clicked="OkButton_Clicked"/>
                 <Button 
                     x:Name="CancelButton" 
                     Text="Отмена"
                     Grid.Column="1"
                     HorizontalOptions="End"
-                    VerticalOptions="Center"/>
+                    VerticalOptions="Center"
+                    Clicked ="CancelButton_Clicked"/>
             </Grid>
             <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                

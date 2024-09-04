@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ADSCrossPlatform.NewAddressPage"
+             Title="NewAddressPage">
+    <ScrollView>
+        <VerticalStackLayout 
+        Padding="10,0"
+        Spacing="5">
+            <Grid 
+            ColumnDefinitions="*, Auto"           
+            HorizontalOptions="FillAndExpand">                
+                <ActivityIndicator 
+                x:Name="LoadActivityIndicator"           
+                IsRunning="False"   
+                IsVisible="False"
+                HorizontalOptions="Center"                     
+                Grid.Column="1"                                  
+                Margin="10,0,0,0"/>
+            </Grid>
+
+            <Label 
+            x:Name="ArticleField" 
+            Style="{StaticResource Headline}"/>
+            <VerticalStackLayout 
+            Padding="10">
+                <Grid     
+                ColumnDefinitions="*, Auto"    
+                Padding="10">
+                    <Label 
+                    Text="Зона - " 
+                    FontSize="16" 
+                    Grid.Column="0"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/>
+                    <Entry 
+                    x:Name="ZoneField" 
+                    FontSize="16"  
+                    HorizontalOptions="EndAndExpand"
+                    VerticalOptions="Center"
+                    Grid.Column="1"/>
+                </Grid>
+
+                <Grid     
+                ColumnDefinitions="*, Auto"  
+                HorizontalOptions="FillAndExpand">
+                    <HorizontalStackLayout  
+                    Grid.Column="0"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    Padding="10">
+                        <Label Text="Место   - " FontSize="16"  VerticalOptions="Center"/>
+
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout  
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    Padding="10">
+                        <Entry x:Name="RowField" FontSize="16"/>
+                        <Label Text=" - "  VerticalOptions="Center" />
+                        <Entry x:Name="PlaceField" FontSize="16" />
+                        <Label Text=" - "  VerticalOptions="Center" />
+                        <Entry x:Name="LevelField" FontSize="16" />
+                    </HorizontalStackLayout>
+
+                </Grid>
+
+                <HorizontalStackLayout Padding="10">
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Padding="10">
+                    <Label Text="  Qty - " FontSize="16"/>
+                    <Label x:Name="QtyField" FontSize="16"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+            <Grid     
+            ColumnDefinitions="*, Auto"  
+            HorizontalOptions="FillAndExpand"
+            Padding="10">
+                <Button 
+                x:Name="OkButton" 
+                Text="Ок" 
+                Grid.Column="0"
+                MinimumWidthRequest="100"
+                HorizontalOptions="StartAndExpand"
+                VerticalOptions="Center"
+                Clicked="OkButton_Clicked"/>
+                <Button 
+                x:Name="CancelButton" 
+                Text="Отмена"
+                Grid.Column="1"
+                HorizontalOptions="End"
+                VerticalOptions="Center"
+                Clicked="CancelButton_Clicked"/>
+            </Grid>
+            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

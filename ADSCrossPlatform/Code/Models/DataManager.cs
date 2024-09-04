@@ -37,6 +37,11 @@ namespace ADSCrossPlatform.Code.Models
             return await _dataBaseApiModel.GetAllContentBySearchAsync(searchData) ?? new Dictionary<string, string>();
         }
 
+        public async Task<bool> CreateMoveWithArticles(List<ProductForMove> productForMove, string toStore, string fromStore)
+        {
+            return await _dataBaseApiModel.CreateMoveWithArticles(productForMove, toStore, fromStore);
+        }
+
         //// Получение всей информации по артикулу или названию
         //public async Task<string[]> GetAllInfoAsync(string article, bool isFindByArticle)
         //{
@@ -97,7 +102,12 @@ namespace ADSCrossPlatform.Code.Models
             return new ObservableCollection<T>(converted);
         }
 
-        internal async Task<Dictionary<string, string>> Login(AccountData accountData)
+        public async Task<bool> CheckData(LoginData loginData)
+        {
+            return await _dataBaseApiModel.CheckData(loginData);
+        }
+
+        internal async Task<LoginData?> Login(AccountData accountData)
         {
             return await _dataBaseApiModel.Login(accountData);
         }

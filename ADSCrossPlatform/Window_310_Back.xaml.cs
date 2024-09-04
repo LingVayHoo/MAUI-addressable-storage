@@ -3,7 +3,7 @@ using ADSCrossPlatform.Code.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-public partial class Window_310 : ContentPage
+public partial class Window_310_Back : ContentPage
 {
     private DataManager _dataManager;
     private AddressViewModel _addressViewModel;
@@ -18,9 +18,9 @@ public partial class Window_310 : ContentPage
 
     private int qtyInStore;
 
-    public Window_310(DataManager dataManager, AddressViewModel addressViewModel, StoredSettings storedSettings)
-	{
-		InitializeComponent();
+    public Window_310_Back(DataManager dataManager, AddressViewModel addressViewModel, StoredSettings storedSettings)
+    {
+        InitializeComponent();
 
         //Внедрение зависимостей
         _dataManager = dataManager;
@@ -36,15 +36,20 @@ public partial class Window_310 : ContentPage
 
         SearchResultsListView.ItemsSource = _searchResultValues;
 
-        windowPicker.SelectedIndex = 0;
+        windowPicker.SelectedIndex = 3;
     }
 
     private async void PickerSelectedIndexChanged(object sender, EventArgs e)
     {
         if (IsBlocked())
         {
-            windowPicker.SelectedIndex = 0;
+            windowPicker.SelectedIndex = 3;
             return;
+        }
+        if (windowPicker.SelectedItem.ToString() == "310")
+        {
+            var mainPage = App.ServiceProvider.GetRequiredService<Window_310>();
+            await Navigation.PushAsync(mainPage);
         }
 
         if (windowPicker.SelectedItem.ToString() == "390")
@@ -56,12 +61,6 @@ public partial class Window_310 : ContentPage
         if (windowPicker.SelectedItem.ToString() == "SLM")
         {
             var Widnow_310_Back_Page = App.ServiceProvider.GetRequiredService<MainPageAndroid>();
-            await Navigation.PushAsync(Widnow_310_Back_Page);
-        }
-
-        if (windowPicker.SelectedItem.ToString() == "450")
-        {
-            var Widnow_310_Back_Page = App.ServiceProvider.GetRequiredService<Window_310_Back>();
             await Navigation.PushAsync(Widnow_310_Back_Page);
         }
     }
@@ -124,21 +123,20 @@ public partial class Window_310 : ContentPage
             LoadIndicator(false);
             ArticleField.Text = productData.Article;
             ArtNameField.Text = productData.Name;
-            QtyTitle.Text = "Всего на складе ЧернаяРечка - ";
+            QtyTitle.Text = "Всего на складе ТТ310 - ";
             ImageViewer.Source = productData.ImageUrl;
 
             //_addressViewModel.Addresses.Clear();
             _addressViewModel.Article = productData.Article;
             _selectedProduct = productData;
 
-            if (productData != null && productData.Storages != null)
+            if (productData != null && productData.Storages != null )
             {
-                var index = Array.IndexOf(productData.Storages, "ЧернаяРечка");
+                var index = Array.IndexOf(productData.Storages, "ТТ310");
                 if (index > 0 && productData?.QtyInStorages?.Length > index) qtyInStore = (int)productData.QtyInStorages[index];
                 else qtyInStore = 0;
                 ArtQtyField.Text = qtyInStore.ToString();
             }
-
 
             _searchResultValues.Clear();
             SearchResultsListView.ItemsSource = _searchResultValues;
@@ -146,16 +144,16 @@ public partial class Window_310 : ContentPage
         }
     }
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        if (IsBlocked()) 
+        if (IsBlocked())
         {
             return;
-        }            
-        CreateMove();
+        }
+        await CreateMove();
     }
 
-    private async void CreateMove()
+    private async Task CreateMove()
     {
         if (_selectedProduct == null)
         {
@@ -195,9 +193,9 @@ public partial class Window_310 : ContentPage
 
         LoadIndicator(true);
         var res = await _dataManager.CreateMoveWithArticles(
-            movingProducts, 
-            _storedSettings.MoveToStore310, 
-            _storedSettings.MoveFromStore310);
+            movingProducts,
+            _storedSettings.MoveFromStore310,
+            _storedSettings.MoveToStore310); // Здесь поменяно местами, надо будет переделать
         LoadIndicator(false);
 
         if (res)
@@ -210,7 +208,6 @@ public partial class Window_310 : ContentPage
             await DisplayAlert("Ошибка", "Списание не удалось", "OK");
         }
     }
-
     private void RefreshAfterSuccess()
     {
         ArticleField.Text = string.Empty;

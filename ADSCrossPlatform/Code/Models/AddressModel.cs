@@ -72,6 +72,8 @@ namespace ADSCrossPlatform.Code.Models
             }
         }
 
+        public AddressDBModel AddressDBModel { get => _addressDBModel; set => _addressDBModel = value; }
+
         public AddressModel(AddressDBModel addressDBModel)
         {
             _addressDBModel = addressDBModel;

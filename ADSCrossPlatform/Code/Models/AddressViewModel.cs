@@ -12,6 +12,8 @@ namespace ADSCrossPlatform.Code.Models
 
         private string _article = string.Empty;
 
+        public string ArticleForNewAddress { get; set; }
+
         public string Article
         {
             get => _article;
@@ -89,7 +91,7 @@ namespace ADSCrossPlatform.Code.Models
             set
             {
                 _selectedAddressModel = value;
-                OnPropertyChanged(nameof(SelectedAddressModel));
+                //OnPropertyChanged(nameof(SelectedAddressModel));
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace ADSCrossPlatform
+﻿using ADSCrossPlatform.Code.Models;
+
+namespace ADSCrossPlatform
 {
     public partial class App : Application
     {
@@ -19,27 +21,21 @@
 
         private void ConfigureServices(IServiceCollection services)
         {
+            //Регистрация страниц
             services.AddTransient<LoginPage>();
             services.AddTransient<MainPageAndroid>();
-            // Другие сервисы
-        }
+            services.AddTransient<Window_310>();
+            services.AddTransient<Window_310_Back>();
+            services.AddTransient<Window_390>();
+            services.AddTransient<Details>();
+            services.AddTransient<NewAddressPage>();
 
-        //private Page GetMainPage()
-        //{
-        //    // Определяем платформу и возвращаем соответствующую страницу обернутую в NavigationPage
-        //    if (DeviceInfo.Platform == DevicePlatform.WinUI)
-        //    {
-        //        return new NavigationPage(new MainPageAndroid());
-        //    }
-        //    else if (DeviceInfo.Platform == DevicePlatform.Android)
-        //    {
-        //        return new NavigationPage(new MainPageWindows());
-        //    }
-        //    else
-        //    {
-        //        // По умолчанию возвращаем MainPageWindows обернутую в NavigationPage
-        //        return new NavigationPage(new MainPageWindows());
-        //    }
-        //}
+            // Регистрация зависимостей
+            services.AddSingleton<SecureSettings>();
+            services.AddSingleton<DataManager>();
+            services.AddSingleton<AddressViewModel>();
+            services.AddSingleton<StoredSettings>();
+            services.AddSingleton<WebApiModel>();
+        }
     }
 }

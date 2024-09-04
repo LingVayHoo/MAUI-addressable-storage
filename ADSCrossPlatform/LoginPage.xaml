@@ -20,6 +20,18 @@
                FontAttributes="Bold"
                HorizontalTextAlignment="Center"
                TextColor="#FF6A1B2A" />
+        
+        <Label 
+            x:Name="EnterShortCodeText"
+            Text="Введи PIN"
+               MinimumWidthRequest="200"
+               FontSize="28"
+               FontAttributes="Bold"
+            
+               HorizontalTextAlignment="Center"
+               TextColor="#FF6A1B2A" />
+
+
 
         <!-- Поле для ввода логина -->
         <Entry x:Name="UsernameEntry"
@@ -44,7 +56,9 @@
                HorizontalOptions="FillAndExpand" />
 
         <!-- Кнопка "Login" -->
-        <Button Text="Login"
+        <Button 
+            x:Name="LoginButton"
+            Text="Login"
                 TextColor="White"
                 FontAttributes="Bold"
                 FontSize="16"
@@ -52,6 +66,30 @@
                 HeightRequest="50"
                 HorizontalOptions="FillAndExpand"
                 Clicked="OnLoginButtonClicked" />
+
+        <!-- Кнопка "Выход" -->
+        <Button 
+            x:Name="LogoutButton"
+            Text="Logout"
+                TextColor="White"
+                FontAttributes="Bold"
+                FontSize="16"
+                CornerRadius="5"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnLogoutButtonClicked" />
+
+        <!-- Кнопка "Готово" -->
+        <Button 
+            x:Name="DoneButton"
+            Text="Готово"
+                TextColor="White"
+                FontAttributes="Bold"
+                FontSize="16"
+                CornerRadius="5"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnDoneButtonClicked" />
 
         <!-- ProgressBar для индикации загрузки -->
         <ActivityIndicator x:Name="LoginActivityIndicator"

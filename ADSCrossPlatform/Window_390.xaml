@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ADSCrossPlatform.Window_310"         
-             Title="Списание на выставку">
+             x:Class="ADSCrossPlatform.Window_390"
+             Title="Списать повреждения">
     <VerticalStackLayout
         Padding="10,0"
         Spacing="5">
@@ -90,6 +90,24 @@
             </ListView>
         </Grid>
 
+        <Grid 
+        ColumnDefinitions="*, Auto"
+        HorizontalOptions="FillAndExpand">
+            <Label 
+                FontSize="20"
+                VerticalOptions="Center"
+                Text="На склад - " 
+                />
+            <Picker 
+                x:Name="StoragePicker" 
+                FontSize="20"     
+                TextColor="Black"
+                SelectedIndexChanged="PickerSelectedIndexChanged"             
+                WidthRequest="130"        
+                HorizontalOptions="EndAndExpand"
+                HorizontalTextAlignment="Center">
+            </Picker>
+        </Grid>
 
         <Grid 
                 ColumnDefinitions="*, Auto"
