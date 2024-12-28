@@ -1,4 +1,7 @@
-﻿using ADSCrossPlatform.Code.Models;
+﻿using ADS;
+using ADS.Code.Export;
+using ADS.Code.Models;
+using ADSCrossPlatform.Code.Models;
 
 namespace ADSCrossPlatform
 {
@@ -16,6 +19,7 @@ namespace ADSCrossPlatform
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
             // Запуск начальной страницы
+            //MainPage = ServiceProvider.GetRequiredService<LoginPage>();
             MainPage = ServiceProvider.GetRequiredService<LoginPage>();
         }
 
@@ -29,6 +33,9 @@ namespace ADSCrossPlatform
             services.AddTransient<Window_390>();
             services.AddTransient<Details>();
             services.AddTransient<NewAddressPage>();
+            services.AddTransient<HistoryPage>();
+            services.AddTransient<SAMS>();
+            services.AddTransient<SACDetails>();
 
             // Регистрация зависимостей
             services.AddSingleton<SecureSettings>();
@@ -36,6 +43,9 @@ namespace ADSCrossPlatform
             services.AddSingleton<AddressViewModel>();
             services.AddSingleton<StoredSettings>();
             services.AddSingleton<WebApiModel>();
+            services.AddSingleton<AddressHistoryViewModel>();
+            services.AddSingleton<SACViewModel>();
+            services.AddSingleton<ExportToExcelHandler>();
         }
     }
 }

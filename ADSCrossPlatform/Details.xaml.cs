@@ -5,7 +5,9 @@ public partial class Details : ContentPage
 {
     private AddressViewModel _addressViewModel;
 
-	public Details(AddressViewModel addressViewModel)
+    public Dictionary<string, string>? Storages { get; set; }
+
+    public Details(AddressViewModel addressViewModel)
 	{
 		InitializeComponent();
 
@@ -17,8 +19,24 @@ public partial class Details : ContentPage
         PlaceField.Text = _addressViewModel.SelectedAddressModel?.Place;
         LevelField.Text = _addressViewModel.SelectedAddressModel?.Level;
         QtyField.Text = _addressViewModel.SelectedAddressModel?.Qty;
+        PrimaryCheckBox.IsChecked = _addressViewModel.SelectedAddressModel?.IsPrimaryPlace ?? false;
+        SalesCheckBox.IsChecked = _addressViewModel.SelectedAddressModel?.IsSalesLocation ?? false;
+    }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
 
+        List<string> storagesList = new List<string>()
+        {
+            "Все"
+        };
+
+        if (Storages != null) storagesList.AddRange(Storages.Values);
+
+        StorePicker.ItemsSource = storagesList;
+
+        SetStorePickerValue();
     }
 
     private void InitFields()
@@ -26,11 +44,14 @@ public partial class Details : ContentPage
         if (_addressViewModel.SelectedAddressModel == null) return;
 
         _addressViewModel.SelectedAddressModel.Article = ArticleField.Text ?? string.Empty;
+        _addressViewModel.SelectedAddressModel.StoreID = StorePicker?.SelectedItem?.ToString() ?? string.Empty;
         _addressViewModel.SelectedAddressModel.Zone = ZoneField.Text ?? string.Empty;
         _addressViewModel.SelectedAddressModel.Row = RowField.Text ?? string.Empty;
         _addressViewModel.SelectedAddressModel.Place = PlaceField.Text ?? string.Empty;
         _addressViewModel.SelectedAddressModel.Level = LevelField.Text ?? string.Empty;
-        _addressViewModel.SelectedAddressModel.Qty = QtyField.Text ?? string.Empty;        
+        _addressViewModel.SelectedAddressModel.Qty = QtyField.Text ?? string.Empty;     
+        _addressViewModel.SelectedAddressModel.IsPrimaryPlace = PrimaryCheckBox.IsChecked;
+        _addressViewModel.SelectedAddressModel.IsSalesLocation = SalesCheckBox.IsChecked;
     }
 
     private void IndicatorSetActive(bool value)
@@ -55,7 +76,6 @@ public partial class Details : ContentPage
         InitFields();
         bool res = false;
         IndicatorSetActive(true);
-        res = await _addressViewModel.EditRecord(_addressViewModel.SelectedAddressModel.AddressDBModel);
         try
         {
             res = await _addressViewModel.EditRecord(_addressViewModel.SelectedAddressModel.AddressDBModel);
@@ -120,6 +140,20 @@ public partial class Details : ContentPage
         catch (Exception ex)
         {
             Logger.LogException(ex);
+        }
+    }
+
+    private void SetStorePickerValue()
+    {
+        foreach (var item in StorePicker.Items)
+        {
+            if (_addressViewModel == null || _addressViewModel.SelectedAddressModel == null) continue;
+
+            if (item == _addressViewModel.SelectedAddressModel.StoreID)
+            {
+                StorePicker.SelectedItem = item;
+                break;
+            }
         }
     }
 }

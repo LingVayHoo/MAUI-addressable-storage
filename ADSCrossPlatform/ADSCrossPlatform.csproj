@@ -45,11 +45,11 @@
 		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-		<PackageCertificateThumbprint>107B9F9F7125A27785DB658D737D9C143726119C</PackageCertificateThumbprint>
+		<PackageCertificateThumbprint>155ADF2E3D1FA545AC22C83C9E66FBD34810BF11</PackageCertificateThumbprint>
 		<AssemblyName>EnkelADS</AssemblyName>
 		<Authors>Andrey Shevchenko</Authors>
 		<Company>Enkel</Company>
-		<PackageIcon>adsicon.png</PackageIcon>
+    <!--<PackageIcon></PackageIcon> -->   
 		<Title>EnkelADS</Title>
 	</PropertyGroup>
 
@@ -95,16 +95,17 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
-	<ItemGroup>
+  
+  <!-- <ItemGroup>
 	  <MauiImage Remove="Resources\Images\adsicon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\Images\adsicon.png" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
+		<PackageReference Include="ClosedXML" Version="0.104.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.61" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.61" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
@@ -125,6 +126,9 @@
 	  <MauiXaml Update="Details.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="HistoryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -132,6 +136,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="NewAddressPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SACDetails.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SAMS.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Window_310.xaml">
@@ -145,13 +155,13 @@
 	  </MauiXaml>
 	</ItemGroup>
 
-	<ItemGroup>
+  <!--<ItemGroup>
 	  <None Update="Resources\Images\adsicon.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
-	</ItemGroup>
+	</ItemGroup>-->
 
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionADSCrossPlatformHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionADSCrossPlatformHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

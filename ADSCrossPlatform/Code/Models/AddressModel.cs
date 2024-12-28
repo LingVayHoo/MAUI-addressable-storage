@@ -17,6 +17,36 @@ namespace ADSCrossPlatform.Code.Models
             }
         }
 
+        public string ProductID
+        {
+            get { return _addressDBModel.ProductID; }
+            set
+            {
+                _addressDBModel.ProductID = value;
+                OnPropertyChanged("ProductID");
+            }
+        }
+
+        public string ProductName
+        {
+            get { return _addressDBModel.ProductName; }
+            set
+            {
+                _addressDBModel.ProductName = value;
+                OnPropertyChanged("ProductName");
+            }
+        }
+
+        public string StoreID
+        {
+            get { return _addressDBModel.StoreID; }
+            set
+            {
+                _addressDBModel.StoreID = value;
+                OnPropertyChanged("StoreID");
+            }
+        }
+
         public string Article
         {
             get { return _addressDBModel.Article; }
@@ -26,6 +56,7 @@ namespace ADSCrossPlatform.Code.Models
                 OnPropertyChanged("Article");
             }
         }
+
         public string Zone
         {
             get { return _addressDBModel.Zone; }
@@ -69,6 +100,36 @@ namespace ADSCrossPlatform.Code.Models
             {
                 _addressDBModel.Qty = value;
                 OnPropertyChanged("Qty");
+            }
+        }
+
+        public bool IsPrimaryPlace
+        {
+            get { return _addressDBModel.IsPrimaryPlace; }
+            set
+            {
+                _addressDBModel.IsPrimaryPlace = value;
+                OnPropertyChanged("IsPrimaryPlace");
+            }
+        }
+
+        public bool IsSalesLocation
+        {
+            get { return _addressDBModel.IsSalesLocation; }
+            set
+            {
+                _addressDBModel.IsSalesLocation = value;
+                OnPropertyChanged("IsSalesLocation");
+            }
+        }
+
+        public byte[] RowVersion
+        {
+            get { return _addressDBModel.RowVersion; }
+            set
+            {
+                _addressDBModel.RowVersion = value;
+                OnPropertyChanged("RowVersion");
             }
         }
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ADSCrossPlatform.HistoryPage"
+             Title="HistoryPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10,0" Spacing="5">
+            <!-- Поле для ввода артикула -->
+            <Grid ColumnDefinitions="*, Auto" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="ArticleEntry"
+                       WidthRequest="200"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Разделитель -->
+            <BoxView HeightRequest="2"
+                     HorizontalOptions="FillAndExpand"
+                     BackgroundColor="DeepSkyBlue"
+                     Margin="0,10,0,0"/>
+
+            <!-- Заголовки колонок -->
+            <Grid Padding="10" Margin="0,10,0,0" BackgroundColor="LightGray" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Text="Date" FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" TextColor="Black" />
+                <Label Grid.Column="1" Text="Old" FontAttributes="Bold" FontSize="16" TextColor="Black"/>
+                <Label Grid.Column="2" Text="New" FontAttributes="Bold" FontSize="16" TextColor="Black"/>
+                <Label Grid.Column="3" Text="Type" FontAttributes="Bold" FontSize="16" HorizontalOptions="End" TextColor="Black"/>
+            </Grid>
+
+            <!-- Разделитель между заголовками и списком -->
+            <BoxView HeightRequest="1" BackgroundColor="Black" HorizontalOptions="FillAndExpand" Margin="0,5,0,5"/>
+
+            <!-- Список истории -->
+            <ListView x:Name="HistoryListView" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border Stroke="Gray" StrokeThickness="1" Margin="0,5,0,5" Padding="10" BackgroundColor="Beige">
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0"
+                                           Text="{Binding ChangeDate, StringFormat='{0:yyyy-MM-dd HH:mm}'}"
+                                           FontSize="14"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding OldValuesFormatted}"
+                                           FontSize="14"
+                                           LineBreakMode="WordWrap"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"/>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding NewValuesFormatted}"
+                                           FontSize="14"
+                                           LineBreakMode="WordWrap"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"/>
+                                    <Label Grid.Column="3"
+                                           Text="{Binding ChangeType}"
+                                           FontSize="14"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"/>
+                                </Grid>
+                            </Border>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

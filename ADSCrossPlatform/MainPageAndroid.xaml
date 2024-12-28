@@ -17,7 +17,7 @@
                     Text="Сменить окно" 
                     VerticalOptions="Center" 
                     HorizontalOptions="Start" 
-                    FontSize="20" 
+                    FontSize="12" 
                     Grid.Column="0"/>
                 <!-- ProgressBar для индикации загрузки -->
                 <ActivityIndicator x:Name="LoginActivityIndicator"
@@ -28,29 +28,64 @@
                            Margin="10,0,0,0"/>
                 
                 <Frame BorderColor="Black"       
-                       HeightRequest="45"       
+                       HeightRequest="35"       
                        CornerRadius="5"       
                        Padding="0"       
                        HasShadow="False"       
                        BackgroundColor="Yellow"       
                        Margin="10,0,0,0" 
                        Grid.Column="1"
-                       WidthRequest="130"
+                       WidthRequest="78"
                        HorizontalOptions="EndAndExpand">
                     <Picker 
-                        x:Name="windowPicker" 
-                        FontSize="20"            
+                        x:Name="windowPicker"                         
+                        FontSize="10"            
                         TextColor="Black"
                         SelectedIndexChanged="PickerSelectedIndexChanged"            
-                        WidthRequest="130"        
+                        WidthRequest="78"        
                         HorizontalOptions="EndAndExpand"
-                        HorizontalTextAlignment="Center">
+                        VerticalOptions="End"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="End">
                         <Picker.Items>
                             <x:String>310</x:String>
                             <x:String>390</x:String>
                             <x:String>SLM</x:String>
                             <x:String>450</x:String>
                         </Picker.Items>
+                    </Picker>
+                </Frame>
+            </Grid>
+
+            <!-- Окно выбора -->
+            <Grid     
+                ColumnDefinitions="*, Auto"    
+                HorizontalOptions="FillAndExpand">
+                <Label 
+                    Text="Сменить склад" 
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Start" 
+                    FontSize="12" 
+                    Grid.Column="0"/>
+
+                <Frame BorderColor="Black"                        
+                       HeightRequest="35"       
+                       CornerRadius="5"       
+                       Padding="0"       
+                       HasShadow="False"       
+                       BackgroundColor="Yellow"       
+                       Margin="10,0,0,0" 
+                       Grid.Column="1"
+                       HorizontalOptions="EndAndExpand"
+                       WidthRequest="100">
+                    <Picker 
+                        x:Name="storePicker"
+                        FontSize="10"            
+                        TextColor="Black"                      
+                        SelectedIndexChanged="StorePicker_SelectedIndexChanged"        
+                        HorizontalOptions="CenterAndExpand"
+                        VerticalOptions="End"                        
+                        HorizontalTextAlignment="Center">
                     </Picker>
                 </Frame>
             </Grid>
@@ -62,7 +97,7 @@
                      Margin="0,10,0,0"/>
 
             <Grid 
-                ColumnDefinitions="*, Auto"
+                ColumnDefinitions="*,*,*,*, Auto"
                 HorizontalOptions="FillAndExpand">
                 <Frame BorderColor="Black"       
                        HeightRequest="45"       
@@ -70,22 +105,46 @@
                        Padding="0"       
                        HasShadow="False"       
                        BackgroundColor="Yellow" 
+                       HorizontalOptions="StartAndExpand"
                        Grid.Column="0">
                     <Entry x:Name="SearchField"           
                            WidthRequest="150"      
                            TextColor="Black"
                            Placeholder="Поиск" 
-                           HorizontalOptions="Start"/>
+                           Completed="SearchField_Completed"
+                           HorizontalOptions="StartAndExpand"/>
                 </Frame>
                 <Button 
+                    x:Name="AllocationButton"
+                    Text="Allocation" 
+                    Clicked="OnAllocationClicked" 
+                    HorizontalOptions ="End"
+                    Margin="10,10,0,10" 
+                    Grid.Column="1"/>
+                <Button 
+                    x:Name="SG010Button"
+                    Text="SG010" 
+                    Clicked="OnSG010Clicked" 
+                    HorizontalOptions ="End"
+                    Margin="10,10,0,10" 
+                    Grid.Column="2"/>
+                <Button 
+                    x:Name="PrenoteButton"
+                    Text="Prenote" 
+                    Clicked="OnPrenoteClicked" 
+                    HorizontalOptions ="End"
+                    Margin="10,10,0,10" 
+                    Grid.Column="3"/>
+                <Button 
+                    x:Name="SearchButton"
                     Text="Поиск" 
                     Clicked="OnSearchButtonClicked" 
                     Margin="10,10,0,10" 
-                    Grid.Column="1"/>
+                    Grid.Column="4"/>
             </Grid>
 
 
-            <Grid ColumnDefinitions="*, Auto"      
+            <Grid ColumnDefinitions="*, *, Auto"      
                   HorizontalOptions="FillAndExpand">
 
                 <!-- Поле ввода -->
@@ -95,13 +154,28 @@
                        Placeholder="Артикул"           
                        Grid.Column="0"           
                        VerticalOptions="Center"                       
-                       HorizontalOptions="StartAndExpand"/>
+                       HorizontalOptions="StartAndExpand">
+                    <Entry.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="ArticleField_Tapped" />
+                    </Entry.GestureRecognizers>
+                </Entry>
+                <Label x:Name="IdField"
+                       IsVisible="False"
+                       Grid.Column="0"/>
+                <!-- Кнопка -->
+                <Button x:Name="History"            
+                        Text="История"            
+                        Clicked="History_Clicked"            
+                        Grid.Column="1"        
+                        Margin="0,0,10,0"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"/>
 
                 <!-- Кнопка -->
                 <Button x:Name="Create"            
                         Text="Создать"            
                         Clicked="Create_Clicked"            
-                        Grid.Column="1"            
+                        Grid.Column="2"            
                         VerticalOptions="Center"/>
             </Grid>
 
@@ -127,22 +201,24 @@
                 <ListView x:Name="SearchResultsListView"
                   IsVisible="True"
                   ItemTapped="SearchResultsListView_ItemTapped"
-                  Grid.Row="0">
+                  Grid.Row="0"
+                          HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <!--<Frame BorderColor="Black"
-                               BackgroundColor="#F0F0F0"
-                                       CornerRadius="5"
-                                       HasShadow="True" 
-                                       Padding="10" >-->
+                                <Border 
+                                    Stroke="Black" 
+                                    StrokeThickness="1" 
+                                    Margin="0,5,0,5" 
+                                    Padding="10" 
+                                    BackgroundColor="Beige">
                                     <Label Text="{Binding .}"
-                                       FontSize="18" HorizontalTextAlignment="Start"
-                                       MinimumHeightRequest="70"                                       
-                                       HorizontalOptions="Start"
+                                           HorizontalOptions="Center"
+                                       FontSize="18"
+                                       MinimumHeightRequest="70"  
                                        LineBreakMode="WordWrap"
-                                           VerticalOptions="StartAndExpand"/>                                    
-                                <!--</Frame>-->
+                                       TextColor="Black"/>
+                                </Border>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -156,8 +232,7 @@
             <Label x:Name="ArtNameField" Margin="10" />
 
 
-            <Grid ColumnDefinitions="*, *, Auto"             
-                  HorizontalOptions="FillAndExpand">
+            <Grid ColumnDefinitions="*, *, Auto">
                 <Label 
                     Text="Всего   - " 
                     Margin="10" 
@@ -174,55 +249,103 @@
                                    HorizontalOptions="Center"                                    
                                    Margin="10,0,0,0" Grid.Column="2"/>
             </Grid>
-            
-                <ListView x:Name="DataListView"
-                          ItemsSource="{Binding Addresses}"
-                          ItemTapped="DataListView_ItemTapped">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <HorizontalStackLayout>
-                                    <!--<Frame BorderColor="Black"
-                                           BackgroundColor="#F0F0F0"
-                                           CornerRadius="5"
-                                           Padding="10"
-                                           HasShadow="True"
-                                           Margin="10,10,10,0">-->
-                                        <Grid>
+
+            <ListView x:Name="DataListView"
+                      ItemsSource="{Binding FilteredAddresses}"
+                      ItemTapped="DataListView_ItemTapped"
+                      HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate >
+                        <ViewCell >
+                            <Border Stroke="Gray" StrokeThickness="1" Margin="0,5,0,5" Padding="10" BackgroundColor="Beige">
+                                <VerticalStackLayout>
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="200"/>
-                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                    
-                                            <!-- Данные -->
-                                            <HorizontalStackLayout Grid.Column="0">
-                                                <Label Text="  Зона - " FontSize="16"/>
-                                                <Label Text="{Binding Zone}" FontSize="16"/>
-                                            </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="0">
+                                            <Label Text="{Binding StoreID} " FontSize="14" TextColor="Black"/>
+                                        </HorizontalStackLayout>
 
-                                            <HorizontalStackLayout Grid.Column="1">
-                                                <Label Text="  Место - " FontSize="16"/>
-                                                <Label Text="{Binding Row}" FontSize="16"/>
-                                                <Label Text="-"/>
-                                                <Label Text="{Binding Place}" FontSize="16"/>
-                                                <Label Text="-"/>
-                                                <Label Text="{Binding Level}" FontSize="16"/>
-                                            </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="1">
+                                            <Label Text="  Зона - " FontSize="16" TextColor="Black"/>
+                                            <Label Text="{Binding Zone} " FontSize="16" TextColor="Black"/>
+                                        </HorizontalStackLayout>
 
-                                            <HorizontalStackLayout Grid.Column="2">
-                                                <Label Text="  Qty - " FontSize="16"/>
-                                                <Label Text="{Binding Qty}" FontSize="16"/>
-                                            </HorizontalStackLayout>
-                                        
+                                        <HorizontalStackLayout Grid.Column="2" HorizontalOptions="End">
+                                            <Label FontSize="16" TextColor="Green">
+                                                <Label.Triggers >
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsPrimaryPlace}" Value="True">
+                                                        <Setter Property="Text" Value=" Осн"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+
                                     </Grid>
-                                    <!--</Frame>-->
-                                </HorizontalStackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+
+                                    <!-- Разделитель -->
+                                    <BoxView HeightRequest="2"
+                                             HorizontalOptions="FillAndExpand"
+                                             BackgroundColor="LightGray"
+                                             Margin="0,5,0,5"/>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Данные -->
+
+                                        <HorizontalStackLayout Grid.Column="0">
+                                            <Label FontSize="16">
+                                                <Label.Triggers>
+                                                    <!-- Если IsSalesLocation = True, текст "Торг" зеленый -->
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsSalesLocation}" Value="True">
+                                                        <Setter Property="Text" Value="Торг" />
+                                                        <Setter Property="TextColor" Value="Green" />
+                                                    </DataTrigger>
+
+                                                    <!-- Если IsSalesLocation = False, текст "Склад" светло-синий -->
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsSalesLocation}" Value="False">
+                                                        <Setter Property="Text" Value="Склад" />
+                                                        <Setter Property="TextColor" Value="DeepSkyBlue" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+
+                                        <HorizontalStackLayout Grid.Column="1">
+                                            <Label Text="| " FontSize="16" TextColor="Black"/>
+                                            <Label Text="{Binding Row}" FontSize="16" TextColor="Black"/>
+                                            <Label Text="-"/>
+                                            <Label Text="{Binding Place}" FontSize="16" TextColor="Black"/>
+                                            <Label Text="-" TextColor="Black"/>
+                                            <Label Text="{Binding Level}" FontSize="16" TextColor="Black"/>
+                                            <Label Text=" |" FontSize="16" TextColor="Black"/>
+                                        </HorizontalStackLayout>
+
+                                        <HorizontalStackLayout Grid.Column="2" HorizontalOptions="End">                                            
+                                            <Label Text="{Binding Qty}" FontSize="16" TextColor="Black"/>
+                                            
+                                        </HorizontalStackLayout>
+
+
+                                        
+
+
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
             <!-- Список данных -->
             
         </VerticalStackLayout>

@@ -211,7 +211,8 @@ public partial class Window_390 : ContentPage
             res = await _dataManager.CreateMoveWithArticles(
             movingProducts,
             targetStore,
-            _storedSettings.MoveFromStore390);
+            _storedSettings.MoveFromStore390,
+            _storedSettings.Username);
             LoadIndicator(false);
         }        
 

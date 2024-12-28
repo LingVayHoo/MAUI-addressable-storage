@@ -195,7 +195,8 @@ public partial class Window_310_Back : ContentPage
         var res = await _dataManager.CreateMoveWithArticles(
             movingProducts,
             _storedSettings.MoveFromStore310,
-            _storedSettings.MoveToStore310); // «десь помен€но местами, надо будет переделать
+            _storedSettings.MoveToStore310,
+            _storedSettings.Username); // «десь помен€но местами, надо будет переделать
         LoadIndicator(false);
 
         if (res)

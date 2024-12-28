@@ -24,6 +24,26 @@
             Style="{StaticResource Headline}"/>
             <VerticalStackLayout 
             Padding="10">
+
+                <Grid     
+                ColumnDefinitions="*, Auto"    
+                Padding="10">
+                    <Label 
+                    Text="Склад - " 
+                    FontSize="16" 
+                    Grid.Column="0"                    
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/>
+                    <Picker 
+                        x:Name="StorePicker"
+                        FontSize="10"    
+                        Grid.Column="1"                        
+                        HorizontalOptions="EndAndExpand"
+                        VerticalOptions="Center"                        
+                        HorizontalTextAlignment="Center">
+                    </Picker>
+                </Grid>
+
                 <Grid     
                 ColumnDefinitions="*, Auto"    
                 Padding="10">
@@ -47,9 +67,8 @@
                     <HorizontalStackLayout  
                     Grid.Column="0"
                     HorizontalOptions="Start"
-                    VerticalOptions="Center"
-                    Padding="10">
-                        <Label Text="Место   - " FontSize="16"  VerticalOptions="Center"/>
+                    VerticalOptions="Center">
+                        <Label Text="  Место   - " FontSize="16"  VerticalOptions="Center"/>
 
                     </HorizontalStackLayout>
                     <HorizontalStackLayout  
@@ -66,12 +85,67 @@
 
                 </Grid>
 
-                <HorizontalStackLayout Padding="10">
-                </HorizontalStackLayout>
-                <HorizontalStackLayout Padding="10">
-                    <Label Text="  Qty - " FontSize="16"/>
-                    <Label x:Name="QtyField" FontSize="16"/>
-                </HorizontalStackLayout>
+                <Grid     
+                ColumnDefinitions="*, Auto"    
+                Padding="10">
+                    <Label 
+                    Text="Qty - " 
+                    FontSize="16" 
+                    Grid.Column="0"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/>
+                    <Entry 
+                    x:Name="QtyField"
+                    FontSize="16"  
+                    HorizontalOptions="EndAndExpand"
+                    VerticalOptions="Center"
+                    Grid.Column="1"/>
+                </Grid>
+                
+                <Grid     
+                    ColumnDefinitions="*, Auto"  
+                    HorizontalOptions="FillAndExpand">
+                    <HorizontalStackLayout 
+                        Padding="10" 
+                        VerticalOptions="Center"
+                        HorizontalOptions="Start" 
+                        Grid.Column="0" >
+                        <Label 
+                            Text="Основное - "                            
+                            FontSize="18"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout 
+                        Padding="10"                        
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Grid.Column="1">
+                        <CheckBox
+                            x:Name="PrimaryCheckBox"
+                            VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Grid>
+                <Grid     
+                    ColumnDefinitions="*, Auto"  
+                    HorizontalOptions="FillAndExpand">
+                    <HorizontalStackLayout 
+                        Padding="10" 
+                        VerticalOptions="Center"
+                        HorizontalOptions="Start" 
+                        Grid.Column="0" >
+                        <Label 
+                            Text="Торговое - "                            
+                            FontSize="18"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout 
+                        Padding="10"                        
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Grid.Column="1">
+                        <CheckBox
+                            x:Name="SalesCheckBox"
+                            VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Grid>
             </VerticalStackLayout>
             <Grid     
             ColumnDefinitions="*, Auto"  
@@ -93,6 +167,7 @@
                 VerticalOptions="Center"
                 Clicked="CancelButton_Clicked"/>
             </Grid>
+
             <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
             </HorizontalStackLayout>

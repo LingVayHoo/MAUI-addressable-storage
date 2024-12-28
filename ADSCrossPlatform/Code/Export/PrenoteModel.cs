@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ADSCrossPlatform.Code.Models
+﻿namespace ADS.Code.Export
 {
-    public class AddressDBModel
+    public class PrenoteModel
     {
         public Guid Id { get; set; }
         public string ProductID { get; set; } = string.Empty;
         public string ProductName { get; set; } = string.Empty;
-        public string StoreID { get; set; } = string.Empty;
         public string Article { get; set; } = string.Empty;
         public string Zone { get; set; } = string.Empty;
         public string Row { get; set; } = string.Empty;
@@ -16,8 +13,7 @@ namespace ADSCrossPlatform.Code.Models
         public string Qty { get; set; } = string.Empty;
         public bool IsPrimaryPlace { get; set; }
         public bool IsSalesLocation { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; } // Оптимистическая блокировка
+        public byte[]? RowVersion { get; set; } // Оптимистическая блокировка
+        public float OrderedQty { get; set; }
     }
 }

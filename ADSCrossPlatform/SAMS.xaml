@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ADSCrossPlatform.SAMS"
+             Title="SAMS">
+    <ScrollView>
+        <VerticalStackLayout Padding="10">
+            <!--Кнопка создания-->
+            <Button 
+                Text="Создать SAC"/>
+            
+            <!-- Разделитель -->
+            <BoxView HeightRequest="2"
+                     HorizontalOptions="FillAndExpand"
+                     BackgroundColor="Black"
+                     Margin="0,10,0,0"/>
+            
+            <!--Выбор диапазона дат-->
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label 
+                    Text="C  "
+                    VerticalOptions="Center" 
+                    HorizontalOptions="End"
+                    Grid.Column="0"/>
+                <DatePicker 
+                    Grid.Column="1"
+                    HorizontalOptions="Start"/>
+                <Label 
+                    Text="До  "
+                    VerticalOptions="Center" 
+                    HorizontalOptions="End"
+                    Grid.Column="2"/>
+                <DatePicker Grid.Column="3"/>
+            </Grid>
+
+            <!--Кнопка поиска-->
+            <Button 
+                Text="Поиск"
+                Grid.Column="1"/>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>                    
+                </Grid.RowDefinitions>
+                <ListView 
+                    x:Name="SearchResultsList"
+                    ItemTapped="SearchResultsListView_ItemTapped"
+                    Grid.Row="0"
+                    HasUnevenRows="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Border 
+                                    Stroke="Black" 
+                                    StrokeThickness="1" 
+                                    Margin="0,5,0,5" 
+                                    Padding="10" 
+                                    BackgroundColor="Beige">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label
+                                            x:Name="SacNameField"
+                                            Text="{Binding Name}"
+                                            Grid.Row="0"
+                                            HorizontalOptions="Center"
+                                            FontSize="18"
+                                            FontAttributes="Bold"/>
+                                        <Label
+                                            Text="Создано"
+                                            Grid.Row="1"
+                                            HorizontalOptions="Start"/>
+                                        <Label
+                                            x:Name="CreateDateField"
+                                            Text="{Binding CreatedTime}"
+                                            Grid.Row="1"
+                                            HorizontalOptions="End"/>
+                                        <Label
+                                            Text="Обновлено"
+                                            Grid.Row="2"
+                                            HorizontalOptions="Start"/>
+                                        <Label
+                                            x:Name="UpdateField"
+                                            Text="{Binding UpdatedTime}"
+                                            Grid.Row="2"
+                                            HorizontalOptions="End"/>
+                                        <Label
+                                            Text="Статус"
+                                            Grid.Row="3"
+                                            HorizontalOptions="Start"/>
+                                        <Label
+                                            x:Name="StatusField"
+                                            Text="{Binding Status}"
+                                            Grid.Row="3"
+                                            HorizontalOptions="End"/>
+                                    </Grid>
+                                </Border>
+                                
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

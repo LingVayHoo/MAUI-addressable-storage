@@ -19,5 +19,6 @@ namespace ADSCrossPlatform.Code.Models
     {
         public List<ProductForMove>? ProductsForMove;
         public string[]? stores;
+        public string CreatorName = string.Empty;
     }
 }

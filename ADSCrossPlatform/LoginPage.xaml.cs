@@ -1,5 +1,8 @@
+using ADS.Code.Login;
 using ADSCrossPlatform.Code.Login;
 using ADSCrossPlatform.Code.Models;
+using Newtonsoft.Json;
+using System;
 
 namespace ADSCrossPlatform;
 
@@ -11,6 +14,7 @@ public partial class LoginPage : ContentPage
     private LoginData? _loginData;
     private bool _isLoggedIn;
     private string? _tempPassword;
+    private string? _tempMainPassword;
     private List<string> _blacklist;
 
     public LoginPage(DataManager dataManager, StoredSettings storedSettings, SecureSettings secureSettings)
@@ -43,23 +47,42 @@ public partial class LoginPage : ContentPage
 
         LoginData loginData = new()
         {
-            UserName = data,
+            UserName = _storedSettings.MemoID,
             OtherData = data,
+            Storages = _storedSettings.Storages,
         };
         LoadIndicator(true);
         UIForCheck(true);
-        _isLoggedIn = await _dataManager.CheckData(loginData);
-        UIForCheck(false);
-        LoadIndicator(false);
-        if (_isLoggedIn)
+        var r = await _dataManager.CheckData(loginData);
+
+        if (r.IsSuccessStatusCode)
         {
-            UsernameEntry.IsReadOnly = true;
-            UsernameEntry.Text = _storedSettings.MemoID;
-            EnterShortCodeText.IsVisible = true;
-            EnterShortCodeText.Text = "Введи PIN";
-            PasswordEntry.Placeholder = "PIN";
-            LogoutButton.IsVisible = true;            
+            _isLoggedIn = true;
+            UIForCheck(false);
+            LoadIndicator(false);
+            if (_isLoggedIn)
+            {
+                UsernameEntry.IsReadOnly = true;
+                UsernameEntry.Text = _storedSettings.MemoID;
+                EnterShortCodeText.IsVisible = true;
+                EnterShortCodeText.Text = "Введи PIN";
+                PasswordEntry.Placeholder = "PIN";
+                LogoutButton.IsVisible = true;
+            }
         }
+        else if (r.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            UIForCheck(false);
+            LoadIndicator(false);
+        }
+        else
+        {
+            UIForCheck(false);
+            LoadIndicator(false);
+            await DisplayAlert("Ошибка", $"Сервер недоступен", "OK");
+            CheckData();
+        }
+        
     }
 
     private void UIForCheck(bool setActive)
@@ -96,8 +119,8 @@ public partial class LoginPage : ContentPage
                 await SettingsUpdate();
                 LoadIndicator(false);
 
-                ApplyStorages(mainPage);
                 mainPage.AdminLogged();
+                ApplyStorages(mainPage);
                 SetPassword();
                 //Application.Current.MainPage = new NavigationPage(mainPage);
             }
@@ -116,22 +139,18 @@ public partial class LoginPage : ContentPage
         LoadIndicator(true);
         //if (username == "bugrdan@akvatoria") 
         _loginData = await _dataManager.Login(new AccountData { Username = username, Password = password });
-
+        _tempMainPassword = password;
         LoadIndicator(false);
 
         return _loginData != null;
-    }
-
-    private void GuysFromStorage()
-    {
-
     }
 
     private async Task SettingsUpdate()
     {
         if (_loginData == null) return;
 
-        await _secureSettings.SaveTokenAsync(_loginData.OtherData);
+        if (!string.IsNullOrEmpty(_loginData.OtherData)) await _secureSettings.SaveTokenAsync(_loginData.OtherData);
+
         _storedSettings.Username = _loginData.UserName;
 
         if (_loginData.Storages != null)
@@ -147,6 +166,8 @@ public partial class LoginPage : ContentPage
         LoadIndicator(true);
         _storedSettings.SaveData();
         LoadIndicator(false);
+
+        return;
     }
 
     private void ApplyStorages(MainPageAndroid mainPage)
@@ -170,8 +191,6 @@ public partial class LoginPage : ContentPage
 
     private async void OnDoneButtonClicked(object sender, EventArgs e)
     {
-        var mainPage = App.ServiceProvider.GetRequiredService<MainPageAndroid>();
-
         if (string.IsNullOrWhiteSpace(UsernameEntry.Text))
         {
             await DisplayAlert("Ошибка", "Имя все еще не введено!", "OK");
@@ -192,8 +211,26 @@ public partial class LoginPage : ContentPage
                 _storedSettings.Password = _tempPassword;
                 _storedSettings.MemoID = UsernameEntry.Text;
                 LoadIndicator(true);
+                var r = await _dataManager.LoginWithMemo(new AccountDataWithMemo()
+                {
+                    MemoID = UsernameEntry.Text,
+                    Username = _loginData?.UserName ?? string.Empty,
+                    Password = _tempMainPassword ?? string.Empty
+
+                });
+
+                if (r == null)
+                {
+                    await DisplayAlert("Ошибка", "Что-то пошло не так", "OK");
+                    return;
+                }
+
+                await _secureSettings.SaveTokenAsync(r.OtherData);
+
                 _storedSettings.SaveData();
                 LoadIndicator(false);
+                var mainPage = App.ServiceProvider.GetRequiredService<MainPageAndroid>();
+                ApplyStorages(mainPage);
                 Application.Current.MainPage = new NavigationPage(mainPage);
             }
             else
@@ -248,6 +285,26 @@ public partial class LoginPage : ContentPage
         PasswordEntry.Text = string.Empty;
         PasswordEntry.Placeholder = "PIN";
         EnterShortCodeText.Text = "Введи имя и придумай PIN";
+        PasswordEntry.Completed -= PasswordEntry_Completed;
+        PasswordEntry.Completed += PasswordEntry_FirstEntered;
     }
 
+    private void PasswordEntry_Completed(object sender, EventArgs e)
+    {
+        LoginButton.SendClicked();
+    }
+
+    private void PasswordEntry_FirstEntered(object sender, EventArgs e)
+    {
+        DoneButton.SendClicked();
+    }
 }
+
+//_loginData = await _dataManager.LoginWithMemo(new AccountDataWithMemo()
+//{
+//    MemoID = UsernameEntry.Text,
+//            Username = _loginData.UserName, 
+//            Password = _tempMainPassword ?? string.Empty
+//        });
+
+//        if (_loginData == null) return false;

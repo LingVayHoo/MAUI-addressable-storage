@@ -197,7 +197,8 @@ public partial class Window_310 : ContentPage
         var res = await _dataManager.CreateMoveWithArticles(
             movingProducts, 
             _storedSettings.MoveToStore310, 
-            _storedSettings.MoveFromStore310);
+            _storedSettings.MoveFromStore310,
+            _storedSettings.Username);
         LoadIndicator(false);
 
         if (res)
